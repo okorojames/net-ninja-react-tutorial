@@ -1,27 +1,19 @@
-import { useState, useEffect } from "react";
 import Bloglist from "./Bloglist";
+import useFetch from "./useFetch";
 const Home = () => {
-  const [blogs, setBlogs] = useState([
-    { title: "My new website", body: "lorem ipsum...", author: "mario", id: 1 },
-    { title: "Welcome party!", body: "lorem ipsum...", author: "yoshi", id: 2 },
-    {
-      title: "Web dev top tips",
-      body: "lorem ipsum...",
-      author: "mario",
-      id: 3,
-    },
-  ]);
-  // deleting blog
-  const handleDelete = (id) => {
-    const newBlogs = blogs.filter((blog) => blog.id !== id);
-    setBlogs(newBlogs);
-  };
-  useEffect(() => {
-    console.log("use effect ran");
-  });
+  // using overall useFetch to always fetc data anytime with any endpoint, so damn cool
+  const {
+    isPending,
+    error,
+    data: blogs,
+  } = useFetch("http://localhost:8000/blogs");
+
+  // rendering template
   return (
     <div className="home">
-      <Bloglist blogs={blogs} title="All Blogs!" handleDelete={handleDelete} />
+      {isPending && <div>Loading...</div>}
+      {error && <div>{error}</div>}
+      {blogs && <Bloglist blogs={blogs} title="All Blogs!" />}
     </div>
   );
 };
